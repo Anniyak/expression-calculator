@@ -44,11 +44,8 @@ function expressionCalculator(expr) {
       const endOperation = end < exp.length - 1 ? exp[end + 1] : null;
       const startExp = exp.substring(0, start - 1);
       const endExp = exp.substring(end + 2);
-      console.log('1:', startExp);
-      console.log('2:', startOperation);
-      console.log('3:', newExp);
-      console.log('4:', endOperation);
-      console.log('5:', endExp);
+      if (expr == " 77 + 79 / 25 * (  64 * 63 - 89 * 14  ) * 49 ".replace(/\s+/g, ''))
+        console.log('=>', startExp, ' ', startOperation, ' ', newExp, ' ', endOperation, ' ', endExp);
       switch (startOperation) {
         case '*':
           switch (endOperation) {
@@ -100,17 +97,29 @@ function expressionCalculator(expr) {
     }
     else {//нет скобок
       let currOperators = [];
-      let start = exp.lastIndexOf('+') > -1 ? exp.lastIndexOf('+') :
-        exp.lastIndexOf('-') > -1 ? exp.lastIndexOf('-') :
-          exp.lastIndexOf('*') > -1 ? exp.lastIndexOf('*') :
-            exp.lastIndexOf('/') > -1 ? exp.lastIndexOf('/') : null;
+      const minus = exp.lastIndexOf('-');
+      const plus = exp.lastIndexOf('+');
+      const subtract = exp.lastIndexOf('*');
+      const divider = exp.lastIndexOf('/');
+      let start = 0;
+      if (plus != -1 || minus != -1) {
+        if (plus != -1 && (minus == -1 || plus > minus)) start = plus;
+        else start = minus;
+      }
+      else {
+        if (subtract != -1 && (divider == -1 || subtract > divider)) start = subtract;
+        else start = divider;
+      }
+      // let start = exp.lastIndexOf('+') > -1 ? exp.lastIndexOf('+') :
+      //  exp.lastIndexOf('-') > -1 ? exp.lastIndexOf('-') :
+      //   exp.lastIndexOf('*') > -1 ? exp.lastIndexOf('*') :
+      //    exp.lastIndexOf('/') > -1 ? exp.lastIndexOf('/') : null;
 
       let currOperator = exp[start];
       const startExp = exp.substring(0, start);
       const endExp = exp.substring(start + 1);
-      // console.log('startExp:', startExp);
-      // console.log('endOperation:', currOperator);
-      // console.log('endExp:', endExp);
+      if (expr == " 77 + 79 / 25 * (  64 * 63 - 89 * 14  ) * 49 ".replace(/\s+/g, ''))
+        console.log('->', startExp, ' ', currOperator, ' ', endExp);
 
       switch (currOperator) {
         case '*': return calc(startExp) * calc(endExp);
