@@ -10,22 +10,40 @@ function expressionCalculator(expr) {
 
     if (!isNaN(exp)) return +exp;
     const start = exp.indexOf('(');
+    const closeBracket = exp.indexOf(')');
+
+    //  console.log('start', start);
+    //   console.log('closeBracket', closeBracket);
+    if (closeBracket > -1 && start == -1) throw ("ExpressionError: Brackets must be paired");
     if (start !== -1) {
-      let brackets = 1;
+      let brackets = 0;
+      let end = 0;
       for (let i = start; i < exp.length; i++) {
-        const end = 0;
-        if (exp[i] == '(') brackets++;
-        if (exp[i] == ')') brackets--;
+        if (exp[i] == '(') brackets = brackets + 1;
+        if (exp[i] == ')') brackets = brackets - 1;
         if (brackets == 0) {
+          //  console.log('end', i);
           end = i;
           break;
         }
+
+        if (brackets < 0) {
+          //   console.log('brackets', brackets);
+          throw ("ExpressionError: Brackets must be paired")
+        };
       }
-      const newExp = exp.substring(start + 1, end - 1);
+
+      if (brackets > 0) {
+        // console.log('brackets', brackets);
+        throw ("ExpressionError: Brackets must be paired");
+      }
+      // console.log('start', start);
+      // console.log('end', end);
+      const newExp = exp.substring(start + 1, end);
       const startOperation = start > 0 ? exp[start - 1] : null;
-      const endOperation = end < exp.length() - 1 ? exp[end + 1] : null;
-      const startExp = exp.substring(0, start);
-      const endExp = exp.substring(end + 1);
+      const endOperation = end < exp.length - 1 ? exp[end + 1] : null;
+      const startExp = exp.substring(0, start - 1);
+      const endExp = exp.substring(end + 2);
       console.log('1:', startExp);
       console.log('2:', startOperation);
       console.log('3:', newExp);
@@ -82,17 +100,17 @@ function expressionCalculator(expr) {
     }
     else {//нет скобок
       let currOperators = [];
-      let start = exp.indexOf('+') > -1 ? exp.indexOf('+') :
-        exp.indexOf('-') > -1 ? exp.indexOf('-') :
-          exp.indexOf('*') > -1 ? exp.indexOf('*') :
-            exp.indexOf('/') > -1 ? exp.indexOf('/') : null;
+      let start = exp.lastIndexOf('+') > -1 ? exp.lastIndexOf('+') :
+        exp.lastIndexOf('-') > -1 ? exp.lastIndexOf('-') :
+          exp.lastIndexOf('*') > -1 ? exp.lastIndexOf('*') :
+            exp.lastIndexOf('/') > -1 ? exp.lastIndexOf('/') : null;
 
       let currOperator = exp[start];
       const startExp = exp.substring(0, start);
       const endExp = exp.substring(start + 1);
-      console.log('startExp:', startExp);
-      console.log('endOperation:', currOperator);
-      console.log('endExp:', endExp);
+      // console.log('startExp:', startExp);
+      // console.log('endOperation:', currOperator);
+      // console.log('endExp:', endExp);
 
       switch (currOperator) {
         case '*': return calc(startExp) * calc(endExp);
